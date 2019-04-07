@@ -31,12 +31,12 @@
        <dependency>
            <groupId>net.tisseurdetoile.batch</groupId>
            <artifactId>springbatch-socle-jsonapi</artifactId>
-           <version>1.0</version>
+           <version>0.1-SNAPSHOT</version>
        </dependency>
        <dependency>
            <groupId>net.tisseurdetoile.batch</groupId>
            <artifactId>springbatch-socle-tools</artifactId>
-           <version>1.0</version>
+           <version>0.1-SNAPSHOT</version>
        </dependency>
        <dependency>
            <groupId>com.h2database</groupId>
