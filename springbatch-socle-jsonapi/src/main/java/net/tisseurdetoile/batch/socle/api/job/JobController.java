@@ -1,0 +1,158 @@
+package net.tisseurdetoile.batch.socle.api.job;
+
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.log4j.Log4j2;
+import net.tisseurdetoile.batch.socle.api.execution.ExecutionController;
+import net.tisseurdetoile.batch.socle.api.execution.ExecutionResource;
+import net.tisseurdetoile.batch.socle.api.jobexplorer.JobExplorerService;
+import net.tisseurdetoile.batch.socle.api.support.JobParametersExtractor;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.launch.NoSuchJobException;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.ResourceSupport;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.TimeZone;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
+/**
+ * https://github.com/spring-projects/spring-batch-admin/blob/9e3ad8bff99b8fad8da62426aa7d2959eb841bcf/spring-batch-admin-manager/src/main/java/org/springframework/batch/admin/web/JobController.java
+ */
+@RestController
+@Log4j2
+@RequestMapping(value = "/jobs", produces = "application/hal+json")
+@EnableBatchProcessing
+public class JobController {
+
+
+    @Autowired
+    public JobRepository jobRepository;
+
+    @Autowired
+    public JobLauncher jobLauncher;
+
+    @Autowired
+    private JobService jobService;
+
+    @Autowired
+    private JobExplorerService jobExplorerService;
+
+    private TimeZone timeZone = TimeZone.getDefault();
+
+    private JobParametersExtractor jobParametersExtractor = new JobParametersExtractor();
+
+    @RequestMapping(value = "/name", method = RequestMethod.GET)
+    public List<String> jobName() {
+        return jobService.jobsName();
+    }
+
+
+    @RequestMapping(value = "/runned", method = RequestMethod.GET)
+    public List<String> all_runned() {
+
+        List<String> allJobs = jobExplorerService.getJobName();
+        log.debug("jobExplorerService.getJobName() = {}",allJobs.toString());
+
+        return allJobs;
+    }
+
+    ExecutionResource getExectionResource (JobExecution jobExecution) {
+        ExecutionResource executionResource = new ExecutionResource(jobExecution, timeZone);
+        executionResource.add(linkTo(ExecutionController.class).slash(String.format("%s.json", jobExecution.getId())).withSelfRel());
+
+        return executionResource;
+    }
+
+    @ApiOperation(value = "Display Job Information",
+    response = JobResourceDetailExecutions.class,
+    nickname = "getJob")
+    @GetMapping("/{jobName}.json")
+    public ResourceSupport getJob(@PathVariable String jobName) {
+        JobResourceDetailExecutions jobResourceDetailExecutions;
+
+        try {
+            Job job = jobService.getJob(jobName);
+
+             jobResourceDetailExecutions = new JobResourceDetailExecutions(job.getName(),
+                     jobExplorerService.getJobInstanceCount(jobName),
+                     null,
+                     jobService.isLaunchable(jobName),
+                     jobService.isIncrementable(jobName));
+
+            List<ExecutionResource> executions = jobService.getJobExecutionForJobName(jobName, true)
+                    .stream()
+                    .map(jobExecution -> getExectionResource(jobExecution))
+                    .collect(Collectors.toList());
+
+             jobResourceDetailExecutions.setExecutions(executions);
+
+            jobResourceDetailExecutions.add(linkTo(JobController.class).slash(String.format("%s.json", jobName)).withSelfRel());
+
+             return  jobResourceDetailExecutions;
+
+        } catch (NoSuchJobException e) {
+            return new JobErrorResource("no.such.job", new JobResource(jobName, 0), String.format( "No such job for name: %s", jobName) );
+        }
+    }
+
+
+    @ApiOperation("Launch Job")
+    @PostMapping("/{jobName}.json")
+    public ResourceSupport postJob(@PathVariable String jobName,
+                                   @RequestParam(required = false) String jobParameters) throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+        log.debug("url parameters = {}", jobParameters);
+
+        JobParameters urlJobParameters = jobParametersExtractor.fromString(jobParameters);
+        JobExecution jobExecution;
+
+        try {
+            jobExecution = jobService.launch(jobName, urlJobParameters);
+        } catch (NoSuchJobException e) {
+            log.error(String.format(String.format( "No such job for name : %s", jobName)));
+            JobErrorResource jobErrorResource = new JobErrorResource("no.such.job", new JobResource(jobName, 0), String.format( "No such job for name: %s", jobName) );
+            return jobErrorResource;
+        } catch (JobInstanceAlreadyCompleteException e) {
+            log.error(String.format( "A job with this name : %s and parameters already completed successfully.", jobName));
+            JobErrorResource jobErrorResource = new JobErrorResource("job.already.complete", new JobResource(jobName, 0), String.format( "A job with this name : %s and parameters already completed successfully.", jobName) );
+            return jobErrorResource;
+        }
+        // TODO r'ajouter les expetion evidentes
+
+        ExecutionResource jobExecutionResource = new ExecutionResource(jobExecution, this.timeZone);
+        jobExecutionResource.add(linkTo(ExecutionController.class).slash(String.format("%s.json", jobExecution.getId())).withSelfRel());
+        jobExecutionResource.add(linkTo(ExecutionController.class).slash(String.format("%s.json", jobExecution.getId())).withRel("execution"));
+
+        return jobExecutionResource;
+    }
+
+    @ApiOperation("Get all Spring Batch jobs")
+    @GetMapping
+    public List<JobResource> all () {
+
+        return jobService.jobsName().stream().map(jobName -> getJobResource(jobName)).collect(Collectors.toList());
+    }
+
+    private JobResource getJobResource(String jobName) {
+        JobResource jobResource = new JobResource(jobName,
+                jobExplorerService.getJobInstanceCount(jobName),
+                null,
+                jobService.isLaunchable(jobName),
+                jobService.isIncrementable(jobName));
+
+        jobResource.add(linkTo(JobController.class).slash(String.format("%s.json", jobName)).withSelfRel());
+
+        return jobResource;
+    }
+}

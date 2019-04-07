@@ -7,7 +7,7 @@
     <groupId>net.tisseurdetoile.batch</groupId>
     <artifactId>socle-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>0.1-SNAPSHOT</version>
     <name>(spring-batch-socle-parent) Parent of the spring batch socle api</name>
 
     <parent>
@@ -21,6 +21,28 @@
         <java.version>11</java.version>
     </properties>
 
+    <licenses>
+        <license>
+            <name>GPL-v3.0</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/tisseurdetoile/socle-batch.git</connection>
+        <url>https://github.com/tisseurdetoile/socle-batch</url>
+    </scm>
+
+
+
+    <developers>
+        <developer>
+            <name>TisseurDeToile</name>
+            <email>webmaster@tisseurdetoile.net</email>
+            <organizationUrl>http://www.tisseurdetoile.net</organizationUrl>
+        </developer>
+    </developers>
 
     <modules>
         <module>springbatch-socle-tools</module>
