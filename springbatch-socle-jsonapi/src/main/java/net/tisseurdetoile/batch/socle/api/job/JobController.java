@@ -111,7 +111,7 @@ public class JobController {
     @ApiOperation("Launch Job")
     @PostMapping("/{jobName}.json")
     public ResourceSupport postJob(@PathVariable String jobName,
-                                   @RequestParam(required = false) String jobParameters) throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+                                   @RequestParam(required = false) String jobParameters)  {
         log.debug("url parameters = {}", jobParameters);
 
         JobParameters urlJobParameters = jobParametersExtractor.fromString(jobParameters);
@@ -127,8 +127,16 @@ public class JobController {
             log.error(String.format( "A job with this name : %s and parameters already completed successfully.", jobName));
             JobErrorResource jobErrorResource = new JobErrorResource("job.already.complete", new JobResource(jobName, 0), String.format( "A job with this name : %s and parameters already completed successfully.", jobName) );
             return jobErrorResource;
+        } catch (JobExecutionAlreadyRunningException e) {
+            log.error(String.format("A job with this name  %s and parameters is already running.", jobName));
+            return new JobErrorResource("job.already.running", new JobResource(jobName, 0), String.format( "A job with this name  %s and parameters is already running.", jobName) );
+        } catch (JobParametersInvalidException e) {
+            log.error(String.format("The job parameters for %s are invalid according to the configuration.", jobName));
+            return new JobErrorResource("job.parameters.invalid", new JobResource(jobName, 0), String.format( "The job parameters for %s are invalid according to the configuration.", jobName) );
+        } catch (JobRestartException e) {
+            log.error(String.format("The job %s was not able to restart.", jobName));
+            return new JobErrorResource("job.could.not.restart", new JobResource(jobName, 0), String.format( "The job %s was not able to restart.", jobName) );
         }
-        // TODO r'ajouter les expetion evidentes
 
         ExecutionResource jobExecutionResource = new ExecutionResource(jobExecution, this.timeZone);
         jobExecutionResource.add(linkTo(ExecutionController.class).slash(String.format("%s.json", jobExecution.getId())).withSelfRel());
