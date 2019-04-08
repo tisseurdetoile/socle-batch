@@ -6,6 +6,7 @@ before_deploy:
 - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep
   -v '\[')
 deploy:
+  skip_cleanup: true
   provider: releases
   api_key:
     secure: EipWnDchWu9cXa/q/fXtlbzjT5E8ZMBDQafIjyT8F1teO18xQoQHM5cZcSmpaOURKp+FcLiCNlEPMGjz0In8G1omh8tHn6RuB4Ec0Nh8UjRTwJH/DY1pYrFPaI5cVWWgbo8x/KSyLRPAtNX96400evIZa2+Xmzl13JEx3OM12lKBbNC35OgXSzc1jBK3SEvuyXcjncKvjzQVOpIJL5WtVSKYy3c0HzaNED0s2wt94FXOQAcYdrgUuM+4D9BTsMpu7NCBM7GEmN8f0U9M/k2UpVCRngT0pkkghuRKVt1EAxVJ63GC4M7yX4nn0PuRjeMCsG0j7dAZOZ4E9Q0Gkh/K35Bw6qr+70bw84Sc/TFBWd0trKCgiNVl4Tpqk7NpExEgNQXMf/kp9m3FlIyQm+qF7X94NQlvLmybOkMeUaalLMIpqVn1RDLahDh48+yKca513hoq5JE/A5qI5G3SwpJpZE74476pxOpsnaXrCuBetIN18fSDSViqb9Ji+SBsAnhm4Y4NKurhT/U1y+Bu+6QhXu9K4QPR8xJggAVItIhbFKny1+e15Ku90sRViJnPZf0jyUdrtUMCM1ZJ9LWD4dWXeE0FRZbW0aUCDB1rMZEX0IAbIb+cLKx2K25n4UmThwhQ+A5RoVvM9LkwUn4hjU4bYbPgTxIY3U3B8f0EORk41cI=
