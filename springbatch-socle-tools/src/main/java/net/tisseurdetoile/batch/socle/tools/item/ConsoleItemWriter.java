@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * Logs each content item by using toString. method.
- * @param <T>
+ * @param <T> Type de l'objet a trairer
  */
 @Log4j2
 public class ConsoleItemWriter<T> implements ItemWriter<T> {

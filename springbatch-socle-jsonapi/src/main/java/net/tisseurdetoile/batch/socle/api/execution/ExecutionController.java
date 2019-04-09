@@ -27,8 +27,10 @@ public class ExecutionController {
 
 
     /**
-     * todo reecrire
-     **/
+     * Recuperer l'execution en parametre
+     * @param executionId id de l'execution.
+     * @return Ressource associe
+     */
     @ApiOperation("View Execution Info")
     @GetMapping("/{executionId}.json")
     public ResourceSupport getExecution(@PathVariable long executionId) {

@@ -27,8 +27,6 @@ import java.util.stream.Collectors;
 public class JobService implements DisposableBean {
     /***
      * TODO utliser le active execution.
-     * @param jobRegistry
-     * @param jobLocator
      * Source :
      * https://github.com/spring-projects/spring-batch-admin/blob/9e3ad8bff99b8fad8da62426aa7d2959eb841bcf/spring-batch-admin-manager/src/main/java/org/springframework/batch/admin/web/JobController.java
      * https://github.com/spring-attic/spring-batch-admin/blob/9e3ad8bff99b8fad8da62426aa7d2959eb841bcf/spring-batch-admin-manager/src/main/java/org/springframework/batch/admin/service/SimpleJobService.java
@@ -123,8 +121,8 @@ public class JobService implements DisposableBean {
 
     /**
      * Le job est dans liste des job que l'on peu lancer
-     * @param jobName
-     * @return
+     * @param jobName nom du job
+     * @return le job est executable a distance
      */
     public boolean isLaunchable (String jobName) {
         return this.jobsName().contains(jobName);

@@ -7,7 +7,7 @@ import org.springframework.batch.core.JobParametersIncrementer;
 import java.util.UUID;
 
 /**
- * RunIdIncrementer qui joute un run.uuid = <UUID> si il n'est passé en paramètre
+ * RunIdIncrementer qui joute un run.uuid = UUID si il n'est passé en paramètre
  * permet de base generer un Job avec id junique
  */
 public class RunUuidIncrementer implements JobParametersIncrementer {

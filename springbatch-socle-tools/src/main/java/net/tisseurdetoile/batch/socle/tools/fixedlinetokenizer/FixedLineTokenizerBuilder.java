@@ -22,7 +22,7 @@ public class FixedLineTokenizerBuilder {
          * La définition de premier attribut dans le flux de la ligne.
          * @param name nom du champ a mapper.
          * @param length taille du champ.
-         * @return
+         * @return The first element
          */
         NextElementStep start(String name, int length);
 
@@ -31,7 +31,7 @@ public class FixedLineTokenizerBuilder {
          * @param name nom du champ a mapper.
          * @param length taille du champ.
          * @param jumpTo postion ou sauter pour recommencer à lire le champ.
-         * @return
+         * @return Next element
          */
 
         NextElementStep start(String name, int length, int jumpTo);
@@ -47,7 +47,7 @@ public class FixedLineTokenizerBuilder {
          * La définition de l'attribut qui suit dans le flux de la ligne.
          * @param name nom du champ a mapper.
          * @param length taille du champ.
-         * @return
+         * @return Next Element
          */
         NextElementStep next(String name, int length);
 
@@ -56,7 +56,7 @@ public class FixedLineTokenizerBuilder {
          * @param name nom du champ a mapper.
          * @param length taille du champ.
          * @param jumpTo postion ou sauter pour recommencer à lire le champ.
-         * @return
+         * @return Next Element
          */
         NextElementStep next(String name, int length, int jumpTo);
 
