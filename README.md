@@ -1,5 +1,7 @@
 # socle-batch
 
+* [![build_status](https://travis-ci.org/tisseurdetoile/socle-batch.svg?branch=master)](https://travis-ci.org/tisseurdetoile/socle-batch)
+
 socle-batch contains a set of tools for springbatch and an rest api.
 
 ## Installation
