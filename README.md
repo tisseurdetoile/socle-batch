@@ -1,16 +1,14 @@
 # socle-batch
 
-* [![build_status](https://travis-ci.org/tisseurdetoile/socle-batch.svg?branch=master)](https://travis-ci.org/tisseurdetoile/socle-batch)
+![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg)
 
 socle-batch contains a set of tools for springbatch and an rest api.
 
 ## Installation
 
-### For the tools only 
+### For the tools only
 
 include the the library **springbatch-socle-tools**
-
-
 
 ```maven
        <dependency>
@@ -37,14 +35,15 @@ include the the library **springbatch-socle-jsonapi**
 See the springbatch-example project
 
 ## Contributing
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
 ## License
-[MIT](https://choosealicense.com/licenses/gpl-3.0/)
 
+[GPL](https://choosealicense.com/licenses/gpl-3.0/)
 
 ## Usefull tool
 
-* [makeAReadme](https://www.makeareadme.com/)
+- [makeAReadme](https://www.makeareadme.com/)
