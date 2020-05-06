@@ -51,12 +51,9 @@ public class SampleJob {
     @Bean(name= "sjProcessor")
     @StepScope
     public ItemProcessor<String, String> processor() {
-        return new ItemProcessor<>() {
-            @Override
-            public String process(String s) throws Exception {
-                TimeUnit.SECONDS.sleep(5);
-                return String.format("Processed %s", s);
-            }
+        return item -> {
+            TimeUnit.SECONDS.sleep(5);
+            return String.format("Processed %s", item);
         };
     }
 
