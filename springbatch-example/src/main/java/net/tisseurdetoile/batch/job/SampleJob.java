@@ -95,14 +95,6 @@ public class SampleJob {
                 .end()
                 .build();
 
-
-        /**
-         * On réference à main je job
-         * utiliser le AutomaticJobRegistrar à l'avenir
-         */
-        //ReferenceJobFactory referenceJobFactory = new ReferenceJobFactory(mainJob);
-        //jobRegistry.register(referenceJobFactory);
-
         return mainJob;
     }
 
