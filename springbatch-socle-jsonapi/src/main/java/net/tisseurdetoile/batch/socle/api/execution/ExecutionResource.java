@@ -86,7 +86,7 @@ public class ExecutionResource extends ResourceSupport {
 
         this.stepExecutions = jobExecution.getStepExecutions().stream()
                 .map(stepExecution -> new StepExecutionInfoResource(stepExecution, this.timeZone))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
         // Duration is always in GMT
         durationFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
