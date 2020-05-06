@@ -8,18 +8,18 @@ import java.util.List;
 
 /**
  * Logs each content item by using toString. method.
- * @param <T> Type de l'objet a trairer
+ * @param <T> Type de l'objet a trairé
  */
 @Log4j2
 public class ConsoleItemWriter<T> implements ItemWriter<T> {
 
     public static final String DEFAULT_LINE_SEPARATOR = System.getProperty("line.separator");
 
-    private FormatterLineAggregator lineAggregator;
+    private FormatterLineAggregator<T> lineAggregator;
     protected String lineSeparator = DEFAULT_LINE_SEPARATOR;
     private boolean sysOut = false;
 
-    public void setLineAggregator(FormatterLineAggregator lineAggregator) {
+    public void setLineAggregator(FormatterLineAggregator<T> lineAggregator) {
         this.lineAggregator = lineAggregator;
     }
 
@@ -31,12 +31,12 @@ public class ConsoleItemWriter<T> implements ItemWriter<T> {
         this.sysOut = sysOut;
     }
 
-    public ConsoleItemWriter(FormatterLineAggregator lineAggregator, String lineSeparator) {
+    public ConsoleItemWriter(FormatterLineAggregator<T> lineAggregator, String lineSeparator) {
         this.lineAggregator = lineAggregator;
         this.lineSeparator = lineSeparator;
     }
 
-    public ConsoleItemWriter(FormatterLineAggregator lineAggregator) {
+    public ConsoleItemWriter(FormatterLineAggregator<T> lineAggregator) {
         this.lineAggregator = lineAggregator;
     }
 
@@ -44,7 +44,7 @@ public class ConsoleItemWriter<T> implements ItemWriter<T> {
     }
 
     @Override
-    public void write(List<? extends T> items) throws Exception {
+    public void write(List<? extends T> items) {
         log.debug(String.format("%s writer start", this.getClass().getSimpleName()));
 
         String output;
@@ -62,6 +62,6 @@ public class ConsoleItemWriter<T> implements ItemWriter<T> {
 
             log.info(output);
         }
-        log.debug(String.format("%s writer end", this.getClass().getSimpleName()));
+        log.debug("{} writer end", this.getClass().getSimpleName());
     }
 }
