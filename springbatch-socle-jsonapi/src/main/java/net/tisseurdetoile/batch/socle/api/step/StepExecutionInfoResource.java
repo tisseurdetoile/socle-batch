@@ -1,5 +1,6 @@
 package net.tisseurdetoile.batch.socle.api.step;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.ExitStatus;
@@ -15,50 +16,51 @@ import java.util.Map;
 import java.util.TimeZone;
 
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class StepExecutionInfoResource extends ResourceSupport {
-    private Long executionId;
+    private final Long executionId;
 
-    private Long jobExecutionId;
+    private final Long jobExecutionId;
 
-    private String stepType;
+    private  String stepType;
 
-    private String stepName;
+    private final String stepName;
 
-    private BatchStatus status;
+    private final BatchStatus status;
 
-    private int readCount;
+    private final int readCount;
 
-    private int writeCount;
+    private final int writeCount;
 
-    private int commitCount;
+    private final int commitCount;
 
-    private int rollbackCount;
+    private final int rollbackCount;
 
-    private int readSkipCount;
+    private final int readSkipCount;
 
-    private int processSkipCount;
+    private final int processSkipCount;
 
-    private int writeSkipCount;
+    private final int writeSkipCount;
 
-    private String startTime;
+    private final String startTime;
 
-    private String endTime;
+    private final String endTime;
 
-    private String lastUpdated;
+    private final String lastUpdated;
 
-    private ExitStatus exitStatus;
+    private final ExitStatus exitStatus;
 
-    private boolean terminateOnly;
+    private final boolean terminateOnly;
 
-    private int filterCount;
+    private final int filterCount;
 
-    private List<Throwable> failureExceptions;
+    private final List<Throwable> failureExceptions;
 
-    private Map<String, Object> executionContext;
+    private final Map<String, Object> executionContext;
 
-    private Integer version;
+    private final Integer version;
 
-    private TimeZone timeZone;
+    private final TimeZone timeZone;
 
     public StepExecutionInfoResource(StepExecution stepExecution, TimeZone timeZone) {
         Assert.notNull(stepExecution, "stepExecution must not be null.");
