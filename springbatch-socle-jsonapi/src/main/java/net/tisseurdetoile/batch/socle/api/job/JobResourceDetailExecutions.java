@@ -1,5 +1,6 @@
 package net.tisseurdetoile.batch.socle.api.job;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import net.tisseurdetoile.batch.socle.api.execution.ExecutionResource;
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true)
 public class JobResourceDetailExecutions extends JobResource {
 
     private List<ExecutionResource> executions;
