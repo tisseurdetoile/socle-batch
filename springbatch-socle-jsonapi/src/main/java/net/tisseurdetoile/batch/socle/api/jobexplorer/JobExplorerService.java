@@ -55,7 +55,7 @@ public class JobExplorerService {
         return jobExplorer.findJobInstancesByJobName(jobName, 0, 10);
     }
 
-    public List<JobExecution>  LastExecution (String jobName) {
+    public List<JobExecution> lastExecution(String jobName) {
 
         List<JobExecution> jobExecutions = new ArrayList<>();
 
