@@ -11,13 +11,10 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.NoSuchJobException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,31 +33,25 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @EnableBatchProcessing
 public class JobController {
 
+    private final JobService jobService;
+    private final JobExplorerService jobExplorerService;
 
-    @Autowired
-    public JobRepository jobRepository;
+    private final TimeZone timeZone = TimeZone.getDefault();
+    private final JobParametersExtractor jobParametersExtractor = new JobParametersExtractor();
 
-    @Autowired
-    public JobLauncher jobLauncher;
+    public JobController(JobService jobService, JobExplorerService jobExplorerService) {
+        this.jobService = jobService;
+        this.jobExplorerService = jobExplorerService;
+    }
 
-    @Autowired
-    private JobService jobService;
-
-    @Autowired
-    private JobExplorerService jobExplorerService;
-
-    private TimeZone timeZone = TimeZone.getDefault();
-
-    private JobParametersExtractor jobParametersExtractor = new JobParametersExtractor();
-
-    @RequestMapping(value = "/name", method = RequestMethod.GET)
+    @GetMapping(value = "/name")
     public List<String> jobName() {
         return jobService.jobsName();
     }
 
 
-    @RequestMapping(value = "/runned", method = RequestMethod.GET)
-    public List<String> all_runned() {
+    @GetMapping(value = "/runned")
+    public List<String> allRunned() {
 
         List<String> allJobs = jobExplorerService.getJobName();
         log.debug("jobExplorerService.getJobName() = {}",allJobs.toString());
@@ -70,7 +61,7 @@ public class JobController {
 
     ExecutionResource getExectionResource (JobExecution jobExecution) {
         ExecutionResource executionResource = new ExecutionResource(jobExecution, timeZone);
-        executionResource.add(linkTo(ExecutionController.class).slash(String.format("%s.json", jobExecution.getId())).withSelfRel());
+        executionResource.add(linkTo(ExecutionController.class).slash(String.format(END_EXTENTION, jobExecution.getId())).withSelfRel());
 
         return executionResource;
     }
@@ -93,12 +84,12 @@ public class JobController {
 
             List<ExecutionResource> executions = jobService.getJobExecutionForJobName(jobName, true)
                     .stream()
-                    .map(jobExecution -> getExectionResource(jobExecution))
+                    .map(this::getExectionResource)
                     .collect(Collectors.toList());
 
              jobResourceDetailExecutions.setExecutions(executions);
 
-            jobResourceDetailExecutions.add(linkTo(JobController.class).slash(String.format("%s.json", jobName)).withSelfRel());
+            jobResourceDetailExecutions.add(linkTo(JobController.class).slash(String.format(END_EXTENTION, jobName)).withSelfRel());
 
              return  jobResourceDetailExecutions;
 
@@ -106,7 +97,6 @@ public class JobController {
             return new JobErrorResource("no.such.job", new JobResource(jobName, 0), String.format( "No such job for name: %s", jobName) );
         }
     }
-
 
     @ApiOperation("Launch Job")
     @PostMapping("/{jobName}.json")
@@ -120,13 +110,11 @@ public class JobController {
         try {
             jobExecution = jobService.launch(jobName, urlJobParameters);
         } catch (NoSuchJobException e) {
-            log.error(String.format(String.format( "No such job for name : %s", jobName)));
-            JobErrorResource jobErrorResource = new JobErrorResource("no.such.job", new JobResource(jobName, 0), String.format( "No such job for name: %s", jobName) );
-            return jobErrorResource;
+            log.error("No such job for name : {}", jobName);
+            return new JobErrorResource("no.such.job", new JobResource(jobName, 0), String.format( "No such job for name: %s", jobName) );
         } catch (JobInstanceAlreadyCompleteException e) {
             log.error(String.format( "A job with this name : %s and parameters already completed successfully.", jobName));
-            JobErrorResource jobErrorResource = new JobErrorResource("job.already.complete", new JobResource(jobName, 0), String.format( "A job with this name : %s and parameters already completed successfully.", jobName) );
-            return jobErrorResource;
+            return new JobErrorResource("job.already.complete", new JobResource(jobName, 0), String.format( "A job with this name : %s and parameters already completed successfully.", jobName) );
         } catch (JobExecutionAlreadyRunningException e) {
             log.error(String.format("A job with this name  %s and parameters is already running.", jobName));
             return new JobErrorResource("job.already.running", new JobResource(jobName, 0), String.format( "A job with this name  %s and parameters is already running.", jobName) );
@@ -139,8 +127,8 @@ public class JobController {
         }
 
         ExecutionResource jobExecutionResource = new ExecutionResource(jobExecution, this.timeZone);
-        jobExecutionResource.add(linkTo(ExecutionController.class).slash(String.format("%s.json", jobExecution.getId())).withSelfRel());
-        jobExecutionResource.add(linkTo(ExecutionController.class).slash(String.format("%s.json", jobExecution.getId())).withRel("execution"));
+        jobExecutionResource.add(linkTo(ExecutionController.class).slash(String.format(END_EXTENTION, jobExecution.getId())).withSelfRel());
+        jobExecutionResource.add(linkTo(ExecutionController.class).slash(String.format(END_EXTENTION, jobExecution.getId())).withRel("execution"));
 
         return jobExecutionResource;
     }
@@ -149,7 +137,7 @@ public class JobController {
     @GetMapping
     public List<JobResource> all () {
 
-        return jobService.jobsName().stream().map(jobName -> getJobResource(jobName)).collect(Collectors.toList());
+        return jobService.jobsName().stream().map(this::getJobResource).collect(Collectors.toList());
     }
 
     private JobResource getJobResource(String jobName) {
@@ -159,8 +147,10 @@ public class JobController {
                 jobService.isLaunchable(jobName),
                 jobService.isIncrementable(jobName));
 
-        jobResource.add(linkTo(JobController.class).slash(String.format("%s.json", jobName)).withSelfRel());
+        jobResource.add(linkTo(JobController.class).slash(String.format(END_EXTENTION, jobName)).withSelfRel());
 
         return jobResource;
     }
+
+    private static final String END_EXTENTION = "%s.json";
 }
