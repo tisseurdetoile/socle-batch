@@ -55,8 +55,8 @@ public class ExecutionController {
 
 
     @ApiOperation("Stop and abandon an Execution")
-    @DeleteMapping(value = "/{executionId}.json", params = {"abadon"})
-    public ResourceSupport stopExecution(@PathVariable long executionId, @RequestParam("abadon") Boolean abandon) {
+    @DeleteMapping(value = "/{executionId}.json", params = {"abandon"})
+    public ResourceSupport stopExecution(@PathVariable long executionId, @RequestParam("abandon") Boolean abandon) {
         return stopOrDeleteExecution(executionId, abandon);
     }
 
