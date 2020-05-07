@@ -8,22 +8,23 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.launch.JobExecutionNotRunningException;
 import org.springframework.batch.core.launch.NoSuchJobExecutionException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.TimeZone;
-
 
 @RestController
 @Log4j2
 @RequestMapping(value = "/executions", produces = "application/hal+json")
 public class ExecutionController {
 
-    @Autowired
-    private JobService jobService;
+    public ExecutionController(JobService jobService) {
+        this.jobService = jobService;
+    }
 
-    private TimeZone timeZone = TimeZone.getDefault();
+    private final JobService jobService;
+
+    private final TimeZone timeZone = TimeZone.getDefault();
 
 
     /**
@@ -39,11 +40,9 @@ public class ExecutionController {
             JobExecution jobExecution = jobService.getJobExecution(executionId);
             return new ExecutionResource(jobExecution, timeZone);
         } catch (NoSuchJobExecutionException e) {
-            log.error(String.format(String.format("No such execution for id : %s", executionId)));
+            log.error(NO_SUCH_EXECUTION_FOR_ID, executionId);
 
-            // TODO correct error
-            JobErrorResource jobErrorResource = new JobErrorResource("no.such.executions", null, String.format("No such execution for id : %s", executionId));
-            return jobErrorResource;
+            return new JobErrorResource("no.such.executions", null, String.format(NO_SUCH_EXECUTION_FOR_ID_SF, executionId));
         }
     }
 
@@ -66,30 +65,30 @@ public class ExecutionController {
         JobExecution stoppedJobExecution;
 
         try {
+            jobExecution = jobService.getJobExecution(executionId);
+            log.debug("JobExecution.isRunning = {}", jobExecution.isRunning());
+
             if (!abandon) {
-                jobExecution = jobService.getJobExecution(executionId);
                 stoppedJobExecution = jobService.stop(executionId);
             } else {
-                jobExecution = jobService.getJobExecution(executionId);
                 stoppedJobExecution = jobService.abandon(executionId);
             }
 
             return new ExecutionResource(stoppedJobExecution, timeZone);
 
         } catch (NoSuchJobExecutionException e) {
-            log.error("No such execution for id : {}", executionId);
+            log.error(NO_SUCH_EXECUTION_FOR_ID, executionId);
 
-            // TODO correct error
-            JobErrorResource jobErrorResource = new JobErrorResource("executions.not.found", null, String.format("No such execution for id : %s", executionId));
-            return jobErrorResource;
+            return new JobErrorResource("executions.not.found", null, String.format(NO_SUCH_EXECUTION_FOR_ID_SF, executionId));
         } catch (JobExecutionNotRunningException e) {
-            log.error("No such execution for id : {}", executionId);
-            JobErrorResource jobErrorResource = new JobErrorResource("executions.not.running", null, String.format("No such execution for id : %s", executionId));
-            return jobErrorResource;
+            log.error(NO_SUCH_EXECUTION_FOR_ID, executionId);
+            return new JobErrorResource("executions.not.running", null, String.format(NO_SUCH_EXECUTION_FOR_ID_SF, executionId));
         } catch (JobExecutionAlreadyRunningException e) {
-            log.error("No such execution for id : {}", executionId);
-            JobErrorResource jobErrorResource = new JobErrorResource("executions.not.abandonable", null, String.format("No such execution for id : %s", executionId));
-            return jobErrorResource;
+            log.error(NO_SUCH_EXECUTION_FOR_ID, executionId);
+            return new JobErrorResource("executions.not.abandonable", null, String.format(NO_SUCH_EXECUTION_FOR_ID_SF, executionId));
         }
     }
+
+    private static final String NO_SUCH_EXECUTION_FOR_ID = "No such execution for id : {}";
+    private static final String NO_SUCH_EXECUTION_FOR_ID_SF = "No such execution for id : %s";
 }
