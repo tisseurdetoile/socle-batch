@@ -8,6 +8,7 @@
         <artifactId>socle-parent</artifactId>
         <version>0.3-SNAPSHOT</version>
     </parent>
+
     <artifactId>springbatch-socle-tools</artifactId>
     <packaging>jar</packaging>
 
@@ -28,14 +29,5 @@
     </build>
 
    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-batch</artifactId>
-        </dependency>
    </dependencies>
 </project>

@@ -29,14 +29,14 @@
 
    <dependencies>
        <dependency>
-           <groupId>net.tisseurdetoile.batch</groupId>
+           <groupId>${project.groupId}</groupId>
            <artifactId>springbatch-socle-jsonapi</artifactId>
-           <version>0.3-SNAPSHOT</version>
+           <version>${project.version}</version>
        </dependency>
        <dependency>
-           <groupId>net.tisseurdetoile.batch</groupId>
+           <groupId>${project.groupId}</groupId>
            <artifactId>springbatch-socle-tools</artifactId>
-           <version>0.3-SNAPSHOT</version>
+           <version>${project.version}</version>
        </dependency>
        <dependency>
            <groupId>com.h2database</groupId>
