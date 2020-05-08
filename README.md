@@ -1,6 +1,7 @@
 # socle-batch
 
-![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg)
+- release : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=release)
+- develop : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=develop)
 
 socle-batch contains a set of tools for springbatch and an rest api.
 
