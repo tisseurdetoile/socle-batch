@@ -154,21 +154,21 @@ public class FixedLineTokenizerBuilder {
          * Classe interne representant les données.
          * qui sont chainées
          */
-        class Entry {
+        static class Entry {
             /**
              * nom de l'attribut
              */
-            private String name;
+            private final String name;
 
             /**
              * private longeur de la chaine à lire;
              */
-            private int length;
+            private final int length;
 
             /**
              * private ou sauter pour recommencer à lire
              */
-            private int skipTo;
+            private final int skipTo;
 
             /**
              * element suivant à lire

@@ -1,5 +1,6 @@
 package net.tisseurdetoile.batch.socle.api.job;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.hateoas.ResourceSupport;
 
@@ -7,14 +8,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class JobErrorResource extends ResourceSupport {
-    private String error;
+    private final String error;
 
-    private JobResource job;
+    private final JobResource job;
 
-    private String description;
+    private final String description;
 
-    private Set<Exception> nestedExceptions;
+    private final Set<Exception> nestedExceptions;
 
     public JobErrorResource(String error, JobResource job, String description) {
         this.error = error;

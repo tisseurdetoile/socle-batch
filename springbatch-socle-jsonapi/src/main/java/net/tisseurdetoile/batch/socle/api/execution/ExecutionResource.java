@@ -1,5 +1,6 @@
 package net.tisseurdetoile.batch.socle.api.execution;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import net.tisseurdetoile.batch.socle.api.step.StepExecutionInfoResource;
 import net.tisseurdetoile.batch.socle.api.support.JobParametersExtractor;
@@ -17,15 +18,16 @@ import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class ExecutionResource extends ResourceSupport {
 
-    private Long executionId;
+    private final Long executionId;
 
-    private int stepExecutionCount;
+    private final int stepExecutionCount;
 
-    private Long jobId;
+    private final Long jobId;
 
-    private String jobName;
+    private final String jobName;
 
     private String startDate = "";
 
@@ -33,11 +35,11 @@ public class ExecutionResource extends ResourceSupport {
 
     private String duration = "";
 
-    private BatchStatus status;
+    private final BatchStatus status;
 
-    private ExitStatus exitStatus;
+    private final ExitStatus exitStatus;
 
-    private String jobParameters;
+    private final String jobParameters;
 
     private Collection<StepExecutionInfoResource> stepExecutions;
 
@@ -49,7 +51,7 @@ public class ExecutionResource extends ResourceSupport {
 
     private boolean stoppable = false;
 
-    private TimeZone timeZone;
+    private final TimeZone timeZone;
 
     public ExecutionResource(JobExecution jobExecution, TimeZone timeZone) {
 
@@ -69,10 +71,10 @@ public class ExecutionResource extends ResourceSupport {
         JobInstance jobInstance = jobExecution.getJobInstance();
         if (jobInstance != null) {
             this.jobName = jobInstance.getJobName();
-            BatchStatus status = jobExecution.getStatus();
-            this.restartable = status.isGreaterThan(BatchStatus.STOPPING) && status.isLessThan(BatchStatus.ABANDONED);
-            this.abandonable = status.isGreaterThan(BatchStatus.STARTED) && status!=BatchStatus.ABANDONED;
-            this.stoppable  = status.isLessThan(BatchStatus.STOPPING);
+            BatchStatus currentStatus = jobExecution.getStatus();
+            this.restartable = currentStatus.isGreaterThan(BatchStatus.STOPPING) && currentStatus.isLessThan(BatchStatus.ABANDONED);
+            this.abandonable = currentStatus.isGreaterThan(BatchStatus.STARTED) && currentStatus!=BatchStatus.ABANDONED;
+            this.stoppable  = currentStatus.isLessThan(BatchStatus.STOPPING);
         }
         else {
             this.jobName = "?";
@@ -86,7 +88,7 @@ public class ExecutionResource extends ResourceSupport {
 
         this.stepExecutions = jobExecution.getStepExecutions().stream()
                 .map(stepExecution -> new StepExecutionInfoResource(stepExecution, this.timeZone))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
         // Duration is always in GMT
         durationFormat.setTimeZone(TimeZone.getTimeZone("GMT"));

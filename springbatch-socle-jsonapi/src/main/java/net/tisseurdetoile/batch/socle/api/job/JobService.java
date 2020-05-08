@@ -32,15 +32,15 @@ public class JobService implements DisposableBean {
      * https://github.com/spring-attic/spring-batch-admin/blob/9e3ad8bff99b8fad8da62426aa7d2959eb841bcf/spring-batch-admin-manager/src/main/java/org/springframework/batch/admin/service/SimpleJobService.java
      */
 
-    private JobRegistry jobRegistry;
+    private final JobRegistry jobRegistry;
 
-    private ListableJobLocator jobLocator;
+    private final ListableJobLocator jobLocator;
 
-    private JobRepository jobRepository;
+    private final JobRepository jobRepository;
 
-    private JobLauncher jobLauncher;
+    private final JobLauncher jobLauncher;
 
-    private JobExplorerService jobExplorerService;
+    private final JobExplorerService jobExplorerService;
 
     // 60 seconds
     private static final int DEFAULT_SHUTDOWN_TIMEOUT = 60 * 1000;
@@ -56,10 +56,10 @@ public class JobService implements DisposableBean {
         this.jobExplorerService = jobExplorerService;
     }
 
-    private Collection<JobExecution> activeExecutions = Collections.synchronizedList(new ArrayList<JobExecution>());
+    private final Collection<JobExecution> activeExecutions = Collections.synchronizedList(new ArrayList<>());
 
     public List<String> jobsName() {
-        return jobRegistry.getJobNames().stream().collect(Collectors.toList());
+        return new ArrayList<>(jobRegistry.getJobNames());
     }
 
     public  JobExecution getJobExecution(long jobExecutionId) throws NoSuchJobExecutionException {
@@ -205,7 +205,6 @@ public class JobService implements DisposableBean {
     public void destroy() throws Exception {
         log.debug("destroy signal recivied");
 
-
         Exception firstException = null;
 
         for (JobExecution jobExecution : activeExecutions) {
@@ -255,7 +254,7 @@ public class JobService implements DisposableBean {
             }
 
             if (!jobExecution.isRunning()) {
-                log.debug("Flush Execution cache - remove JobExecution >%s<", jobExecution);
+                log.debug("Flush Execution cache - remove JobExecution >{}<", jobExecution);
                 iterator.remove();
             }
         }

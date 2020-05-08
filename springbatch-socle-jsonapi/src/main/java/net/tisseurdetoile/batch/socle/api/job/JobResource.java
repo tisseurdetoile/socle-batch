@@ -1,18 +1,20 @@
 package net.tisseurdetoile.batch.socle.api.job;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.hateoas.ResourceSupport;
 
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class JobResource extends ResourceSupport {
 
     private final String name;
 
     private final int executionCount;
 
-    private boolean launchable;
+    private final boolean launchable;
 
-    private boolean incrementable;
+    private final boolean incrementable;
 
     private final Long jobInstanceId;
 

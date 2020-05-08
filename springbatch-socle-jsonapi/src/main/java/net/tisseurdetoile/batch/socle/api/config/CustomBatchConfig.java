@@ -12,15 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
- * Verifier la pertinence de tout les element
- * cf. dans les logs
- * o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+ * Custom configuration for the springbatch json API
  */
 @Configuration
 @EnableBatchProcessing
@@ -29,31 +24,31 @@ public class CustomBatchConfig extends DefaultBatchConfigurer {
     @Autowired
     private JobRepository jobRepository;
 
-    //@Autowired
-    //private JobRegistry jobRegistry;
+    @Value("${spring.batch.jsonapi.poolsize:3}")
+    private int poolSize;
 
-    @Value("${spring.batch.num-thread:3}")
-    private int threadSize;
+    @Value("${spring.batch.jsonapi.maxpoolsize:6}")
+    private int maxPoolSize;
 
+    @Value("${spring.batch.jsonapi.queuesize:2}")
+    private int queueSize;
 
     @Bean
     public TaskExecutor taskExecutor() {
-        //SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
-        //taskExecutor.setConcurrencyLimit(4);
-        return new ConcurrentTaskExecutor(getexecutorService());
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(poolSize);
+        executor.setMaxPoolSize(maxPoolSize);
+        executor.setQueueCapacity(queueSize);
+        executor.setThreadNamePrefix("jsonApiPoolExecutor-");
+        executor.initialize();
+
+        return executor;
     }
 
-    @Bean
-    public ExecutorService getexecutorService() {
-        ExecutorService executorService = Executors.newFixedThreadPool(threadSize);
-        return executorService;
-    }
-
-    @Bean
-    public JobLauncher getJobLauncher() {
+    @Override
+    protected JobLauncher createJobLauncher() {
         SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
         jobLauncher.setJobRepository(jobRepository);
-
         jobLauncher.setTaskExecutor(taskExecutor());
 
         return jobLauncher;
