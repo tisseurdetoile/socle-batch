@@ -1,0 +1,6 @@
+POST http://localhost:8080/jobs/SampleJob.json
+Content-Type: application/json
+
+{}
+
+###
