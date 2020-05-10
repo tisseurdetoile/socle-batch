@@ -1,0 +1,9 @@
+GET http://localhost:8080/jobs/SampleJob.json
+
+###
+POST http://localhost:8080/jobs/SampleJob.json
+Content-Type: application/x-www-form-urlencoded
+
+### Lance SampleInseeJob
+POST http://localhost:8080/jobs/SampleInseeJob.json
+Content-Type: application/x-www-form-urlencoded
