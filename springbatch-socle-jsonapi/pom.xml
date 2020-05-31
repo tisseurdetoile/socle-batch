@@ -6,7 +6,7 @@
     <parent>
         <groupId>net.tisseurdetoile.batch</groupId>
         <artifactId>socle-parent</artifactId>
-        <version>0.3-SNAPSHOT</version>
+        <version>0.3</version>
     </parent>
     <artifactId>springbatch-socle-jsonapi</artifactId>
     <packaging>jar</packaging>
