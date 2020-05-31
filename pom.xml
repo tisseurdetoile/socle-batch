@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -33,21 +33,6 @@
         <url>https://github.com/tisseurdetoile/socle-batch</url>
     </scm>
 
-    <distributionManagement>
-        <site>
-            <id>api.wiki</id>
-            <url>https://github.com/tisseurdetoile/socle-batch/wiki</url>
-        </site>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
     <developers>
         <developer>
             <name>TisseurDeToile</name>
@@ -63,9 +48,43 @@
     </modules>
 
     <profiles>
-        <!-- Activate using the release property: mvn clean install -Prelease -->
         <profile>
-            <id>deploy</id>
+            <id>deploy-github</id>
+            <activation>
+                <property>
+                    <name>useGitHubRepo</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>github</id>
+                    <name>GitHub OWNER Apache Maven Packages</name>
+                    <url>https://maven.pkg.github.com/tisseurdetoile/socle-batch</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>deploy-sonatype</id>
+            <activation>
+                <property>
+                    <name>!useGitHubRepo</name>
+                </property>
+            </activation>
+            <distributionManagement>
+                <site>
+                    <id>api.wiki</id>
+                    <url>https://github.com/tisseurdetoile/socle-batch/wiki</url>
+                </site>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
             <build>
                 <plugins>
                     <!-- To generate javadoc -->
@@ -132,6 +151,7 @@
             </build>
         </profile>
     </profiles>
+
 
     <build>
         <pluginManagement>
