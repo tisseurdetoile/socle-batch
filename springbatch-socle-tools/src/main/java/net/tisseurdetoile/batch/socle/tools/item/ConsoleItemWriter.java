@@ -7,8 +7,8 @@ import org.springframework.batch.item.file.transform.FormatterLineAggregator;
 import java.util.List;
 
 /**
- * Logs each content item by using toString. method.
- * @param <T> Type de l'objet a trairé
+ * Logs each content item by using log4j
+ * @param <T> Type de l'objet a traité
  */
 @Log4j2
 public class ConsoleItemWriter<T> implements ItemWriter<T> {
@@ -17,7 +17,6 @@ public class ConsoleItemWriter<T> implements ItemWriter<T> {
 
     private FormatterLineAggregator<T> lineAggregator;
     protected String lineSeparator = DEFAULT_LINE_SEPARATOR;
-    private boolean sysOut = false;
 
     public void setLineAggregator(FormatterLineAggregator<T> lineAggregator) {
         this.lineAggregator = lineAggregator;
@@ -25,10 +24,6 @@ public class ConsoleItemWriter<T> implements ItemWriter<T> {
 
     public void setLineSeparator(String lineSeparator) {
         this.lineSeparator = lineSeparator;
-    }
-
-    public void setSysOut(boolean sysOut) {
-        this.sysOut = sysOut;
     }
 
     public ConsoleItemWriter(FormatterLineAggregator<T> lineAggregator, String lineSeparator) {
@@ -45,23 +40,13 @@ public class ConsoleItemWriter<T> implements ItemWriter<T> {
 
     @Override
     public void write(List<? extends T> items) {
-        log.debug(String.format("%s writer start", this.getClass().getSimpleName()));
+        log.debug("{} writer start", this.getClass().getSimpleName());
 
-        String output;
+        items.forEach(item -> log.info("{}{}",
+                (this.lineAggregator != null)?
+                this.lineAggregator.aggregate(item) : item.toString(),
+                this.lineSeparator));
 
-        for (T item : items) {
-            if (this.lineAggregator != null) {
-                output = (String.format("%s%s", this.lineAggregator.aggregate(item), this.lineSeparator));
-            } else {
-                output = (String.format("Item={%s}%s", item.toString(), this.lineSeparator));
-            }
-
-            if (this.sysOut) {
-                System.out.print(output);
-            }
-
-            log.info(output);
-        }
         log.debug("{} writer end", this.getClass().getSimpleName());
     }
 }
