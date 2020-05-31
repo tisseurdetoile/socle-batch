@@ -13,6 +13,10 @@
 
     <name>(springbatch-example) Simple spring batch example</name>
 
+    <properties>
+        <start-class>net.tisseurdetoile.batch.sample.SampleApplication</start-class>
+    </properties>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -22,6 +26,10 @@
                     <configuration>
                         <testFailureIgnore>true</testFailureIgnore>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
                 </plugin>
             </plugins>
         </pluginManagement>
