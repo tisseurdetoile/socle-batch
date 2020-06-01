@@ -1,9 +1,13 @@
 package net.tisseurdetoile.batch.socle.api.job;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.log4j.Log4j2;
 import net.tisseurdetoile.batch.socle.api.execution.ExecutionController;
 import net.tisseurdetoile.batch.socle.api.execution.ExecutionResource;
+import net.tisseurdetoile.batch.socle.api.job.exception.*;
 import net.tisseurdetoile.batch.socle.api.jobexplorer.JobExplorerService;
 import net.tisseurdetoile.batch.socle.api.support.JobParametersExtractor;
 import org.springframework.batch.core.Job;
@@ -15,14 +19,14 @@ import org.springframework.batch.core.launch.NoSuchJobException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  * https://github.com/spring-projects/spring-batch-admin/blob/9e3ad8bff99b8fad8da62426aa7d2959eb841bcf/spring-batch-admin-manager/src/main/java/org/springframework/batch/admin/web/JobController.java
@@ -66,11 +70,13 @@ public class JobController {
         return executionResource;
     }
 
-    @ApiOperation(value = "Display Job Information",
-    response = JobResourceDetailExecutions.class,
-    nickname = "getJob")
+    @Operation(summary = "Display Job Information",
+    responses = { @ApiResponse(
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = JobResourceDetailExecutions.class)))
+    })
     @GetMapping("/{jobName}.json")
-    public ResourceSupport getJob(@PathVariable String jobName) {
+    public JobResourceDetailExecutions getJob(@PathVariable String jobName) {
         JobResourceDetailExecutions jobResourceDetailExecutions;
 
         try {
@@ -94,13 +100,14 @@ public class JobController {
              return  jobResourceDetailExecutions;
 
         } catch (NoSuchJobException e) {
-            return new JobErrorResource("no.such.job", new JobResource(jobName, 0), String.format( "No such job for name: %s", jobName) );
+            log.error("No such job for name : {}", jobName);
+            throw new JobNotFoundException(jobName);
         }
     }
 
-    @ApiOperation("Launch Job")
+    @Operation(summary = "Launch Job")
     @PostMapping("/{jobName}.json")
-    public ResourceSupport postJob(@PathVariable String jobName,
+    public ExecutionResource postJob(@PathVariable String jobName,
                                    @RequestParam(required = false) String jobParameters)  {
         log.debug("url parameters = {}", jobParameters);
 
@@ -111,19 +118,19 @@ public class JobController {
             jobExecution = jobService.launch(jobName, urlJobParameters);
         } catch (NoSuchJobException e) {
             log.error("No such job for name : {}", jobName);
-            return new JobErrorResource("no.such.job", new JobResource(jobName, 0), String.format( "No such job for name: %s", jobName) );
+            throw new JobNotFoundException(jobName);
         } catch (JobInstanceAlreadyCompleteException e) {
-            log.error(String.format( "A job with this name : %s and parameters already completed successfully.", jobName));
-            return new JobErrorResource("job.already.complete", new JobResource(jobName, 0), String.format( "A job with this name : %s and parameters already completed successfully.", jobName) );
+            log.error("A job with this name : {} and parameters already completed successfully.", jobName);
+            throw new JobAlreadyComplete(jobName);
         } catch (JobExecutionAlreadyRunningException e) {
-            log.error(String.format("A job with this name  %s and parameters is already running.", jobName));
-            return new JobErrorResource("job.already.running", new JobResource(jobName, 0), String.format( "A job with this name  %s and parameters is already running.", jobName) );
+            log.error("A job with this name {} and parameters is already running.", jobName);
+            throw new JobAlreadyRunning(jobName);
         } catch (JobParametersInvalidException e) {
-            log.error(String.format("The job parameters for %s are invalid according to the configuration.", jobName));
-            return new JobErrorResource("job.parameters.invalid", new JobResource(jobName, 0), String.format( "The job parameters for %s are invalid according to the configuration.", jobName) );
+            log.error("The job parameters for {} are invalid according to the configuration.", jobName);
+            throw new JobInvalidParameters(jobName);
         } catch (JobRestartException e) {
-            log.error(String.format("The job %s was not able to restart.", jobName));
-            return new JobErrorResource("job.could.not.restart", new JobResource(jobName, 0), String.format( "The job %s was not able to restart.", jobName) );
+            log.error("The job {} was not able to restart.", jobName);
+            throw new JobCouldNotRestart(jobName);
         }
 
         ExecutionResource jobExecutionResource = new ExecutionResource(jobExecution, this.timeZone);
@@ -133,7 +140,7 @@ public class JobController {
         return jobExecutionResource;
     }
 
-    @ApiOperation("Get all Spring Batch jobs")
+    @Operation(summary = "Get all Spring Batch jobs")
     @GetMapping
     public List<JobResource> all () {
 

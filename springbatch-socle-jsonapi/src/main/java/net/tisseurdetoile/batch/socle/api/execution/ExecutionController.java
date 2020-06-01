@@ -1,14 +1,15 @@
 package net.tisseurdetoile.batch.socle.api.execution;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.log4j.Log4j2;
-import net.tisseurdetoile.batch.socle.api.job.JobErrorResource;
+import net.tisseurdetoile.batch.socle.api.execution.exception.ExecutionAlreadyRunning;
+import net.tisseurdetoile.batch.socle.api.execution.exception.ExecutionNotFound;
+import net.tisseurdetoile.batch.socle.api.execution.exception.ExecutionNotRunning;
 import net.tisseurdetoile.batch.socle.api.job.JobService;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.launch.JobExecutionNotRunningException;
 import org.springframework.batch.core.launch.NoSuchJobExecutionException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.TimeZone;
@@ -28,38 +29,36 @@ public class ExecutionController {
 
 
     /**
-     * Recuperer l'execution en parametre
+     * Récupérer l'execution en paramètre
      * @param executionId id de l'execution.
      * @return Ressource associe
      */
-    @ApiOperation("View Execution Info")
+    @Operation(summary = "View Execution Info")
     @GetMapping("/{executionId}.json")
-    public ResourceSupport getExecution(@PathVariable long executionId) {
+    public ExecutionResource getExecution(@PathVariable long executionId) {
 
         try {
             JobExecution jobExecution = jobService.getJobExecution(executionId);
             return new ExecutionResource(jobExecution, timeZone);
         } catch (NoSuchJobExecutionException e) {
-            log.error(NO_SUCH_EXECUTION_FOR_ID, executionId);
-
-            return new JobErrorResource("no.such.executions", null, String.format(NO_SUCH_EXECUTION_FOR_ID_SF, executionId));
+            log.error("No such execution for id : {}", executionId);
+            throw new ExecutionNotFound(executionId);
         }
     }
 
-    @ApiOperation("Stop an Existing Execution")
+    @Operation(summary = "Stop an Existing Execution")
     @DeleteMapping("/{executionId}.json")
-    public ResourceSupport stopExecution(@PathVariable long executionId) {
+    public ExecutionResource stopExecution(@PathVariable long executionId) {
         return stopOrDeleteExecution(executionId, false);
     }
 
-
-    @ApiOperation("Stop and abandon an Execution")
+    @Operation(summary = "Stop and abandon an Execution")
     @DeleteMapping(value = "/{executionId}.json", params = {"abandon"})
-    public ResourceSupport stopExecution(@PathVariable long executionId, @RequestParam("abandon") Boolean abandon) {
+    public ExecutionResource stopExecution(@PathVariable long executionId, @RequestParam("abandon") Boolean abandon) {
         return stopOrDeleteExecution(executionId, abandon);
     }
 
-    private ResourceSupport stopOrDeleteExecution(long executionId, boolean abandon) {
+    private ExecutionResource stopOrDeleteExecution(long executionId, boolean abandon) {
 
         JobExecution jobExecution;
         JobExecution stoppedJobExecution;
@@ -77,18 +76,14 @@ public class ExecutionController {
             return new ExecutionResource(stoppedJobExecution, timeZone);
 
         } catch (NoSuchJobExecutionException e) {
-            log.error(NO_SUCH_EXECUTION_FOR_ID, executionId);
-
-            return new JobErrorResource("executions.not.found", null, String.format(NO_SUCH_EXECUTION_FOR_ID_SF, executionId));
+            log.error("No such execution for id : {}", executionId);
+            throw new ExecutionNotFound(executionId);
         } catch (JobExecutionNotRunningException e) {
-            log.error(NO_SUCH_EXECUTION_FOR_ID, executionId);
-            return new JobErrorResource("executions.not.running", null, String.format(NO_SUCH_EXECUTION_FOR_ID_SF, executionId));
+            log.error("Not running execution for id : {}", executionId);
+            throw new ExecutionNotRunning(executionId);
         } catch (JobExecutionAlreadyRunningException e) {
-            log.error(NO_SUCH_EXECUTION_FOR_ID, executionId);
-            return new JobErrorResource("executions.not.abandonable", null, String.format(NO_SUCH_EXECUTION_FOR_ID_SF, executionId));
+            log.error("Execution AlreadyRunning for id {}", executionId);
+            throw new ExecutionAlreadyRunning(executionId);
         }
     }
-
-    private static final String NO_SUCH_EXECUTION_FOR_ID = "No such execution for id : {}";
-    private static final String NO_SUCH_EXECUTION_FOR_ID_SF = "No such execution for id : %s";
 }

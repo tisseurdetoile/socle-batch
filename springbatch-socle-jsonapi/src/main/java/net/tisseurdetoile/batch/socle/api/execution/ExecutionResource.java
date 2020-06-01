@@ -8,7 +8,7 @@ import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobInstance;
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class ExecutionResource extends ResourceSupport {
+public class ExecutionResource extends RepresentationModel<ExecutionResource> {
 
     private final Long executionId;
 

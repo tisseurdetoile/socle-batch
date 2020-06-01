@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "spring.batch.jsonapi.queuesize",
+      "type": "java.lang.String",
+      "description": "Size of the queue of the executor."
+    },
+    {
+      "name": "spring.batch.jsonapi.poolsize",
+      "type": "java.lang.String",
+      "description": "Size of the pool of the executor."
+    },
+    {
+      "name": "spring.batch.jsonapi.maxpoolsize",
+      "type": "java.lang.String",
+      "description": "Max size of the pool."
+    }
+  ] }
