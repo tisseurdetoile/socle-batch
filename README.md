@@ -15,7 +15,7 @@ You can use the [springbatch-example](https://github.com/tisseurdetoile/socle-ba
 
 Add this in your pom.xml
 
-```maven
+```xml
        <dependency>
            <groupId>net.tisseurdetoile.batch</groupId>
            <artifactId>springbatch-socle-jsonapi</artifactId>
