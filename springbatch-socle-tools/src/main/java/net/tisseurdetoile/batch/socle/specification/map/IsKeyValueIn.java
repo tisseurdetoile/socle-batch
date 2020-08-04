@@ -21,7 +21,7 @@ public class IsKeyValueIn extends AbstractMapSpecification  {
     public boolean isSatisfiedBy(Map<String, String> candidate) {
 
         if (isKeyIn(candidate)) {
-            if (this.getCompareMode() == CompareMode.List) {
+            if (this.getCompareMode() == CompareMode.LIST) {
                 return compareListString(candidate);
             }
 

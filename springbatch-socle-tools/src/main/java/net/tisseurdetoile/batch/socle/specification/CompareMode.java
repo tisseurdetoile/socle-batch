@@ -8,9 +8,9 @@ public enum CompareMode {
     /**
      * comparaison de chaine.
      */
-    String,
+    STRING,
     /**
      * comparaison avec liste de chaine.
      */
-    List
+    LIST
 }

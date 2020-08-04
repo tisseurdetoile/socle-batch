@@ -142,7 +142,6 @@ public class JobService implements DisposableBean {
         } catch (NoSuchJobException e) {
             throw new IllegalStateException("Unexpected non-existent job: " + jobName);
         }
-
     }
 
     public int countJobs() {
@@ -258,6 +257,5 @@ public class JobService implements DisposableBean {
                 iterator.remove();
             }
         }
-
     }
 }
