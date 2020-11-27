@@ -45,7 +45,7 @@ public class JobService implements DisposableBean {
     // 60 seconds
     private static final int DEFAULT_SHUTDOWN_TIMEOUT = 60 * 1000;
 
-    private int shutdownTimeout = DEFAULT_SHUTDOWN_TIMEOUT;
+    private final int shutdownTimeout = DEFAULT_SHUTDOWN_TIMEOUT;
 
     @Autowired
     JobService(JobRegistry jobRegistry, ListableJobLocator jobLocator, JobRepository jobRepository, JobLauncher jobLauncher, JobExplorerService jobExplorerService) {
