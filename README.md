@@ -4,8 +4,8 @@ A simple JSON api for launching/monitoring you spring batch.
 
 ## Build Status
 
-- release 0.3 : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=release)
-- develop 0.4-SNAPSHOT : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=develop)
+- release 0.4 : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=release)
+- develop 0.5-SNAPSHOT : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=develop)
     
 ## Installation
 
@@ -19,7 +19,7 @@ Add this in your pom.xml
        <dependency>
            <groupId>net.tisseurdetoile.batch</groupId>
            <artifactId>springbatch-socle-jsonapi</artifactId>
-           <version>0.3</version>
+           <version>0.4</version>
        </dependency>
 ```
 
@@ -51,7 +51,7 @@ For more detail see the [springbatch-example](https://github.com/tisseurdetoile/
 
 | socle-batch   |  JDK  |   spring |
 | ------------- |: ---: | -------: |
-| 0.4-SNAPSHOT  | 14    |  2.2.6   |
+| 0.4           | 11    |  2.2.11  |
 | 0.3           | 11    |  2.1.14  |
 | 0.2           | 11    |  2.1.2   |
 
