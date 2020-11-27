@@ -6,7 +6,7 @@ import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepExecution;
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.util.Assert;
 
 import java.text.SimpleDateFormat;
@@ -17,7 +17,7 @@ import java.util.TimeZone;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class StepExecutionInfoResource extends ResourceSupport {
+public class StepExecutionInfoResource extends RepresentationModel<StepExecutionInfoResource> {
     private final Long executionId;
 
     private final Long jobExecutionId;

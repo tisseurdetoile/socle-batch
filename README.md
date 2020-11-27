@@ -1,39 +1,59 @@
 # socle-batch
 
-- release : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=release)
-- develop : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=develop)
+A simple JSON api for launching/monitoring you spring batch. 
 
-socle-batch contains a set of tools for springbatch and an rest api.
+## Build Status
 
+- release 0.3 : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=release)
+- develop 0.4-SNAPSHOT : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=develop)
+    
 ## Installation
 
-### For the tools only
+You can use the [springbatch-example](https://github.com/tisseurdetoile/socle-batch/tree/master/springbatch-example) as a starter project
 
-include the the library **springbatch-socle-tools**
+### In existing spring-batch project
 
-```maven
-       <dependency>
-           <groupId>net.tisseurdetoile.batch</groupId>
-           <artifactId>springbatch-socle-tools</artifactId>
-           <version>RELEASE</version>
-       </dependency>
-```
+Add this in your pom.xml
 
-### For the API
-
-include the the library **springbatch-socle-jsonapi**
-
-```maven
+```xml
        <dependency>
            <groupId>net.tisseurdetoile.batch</groupId>
            <artifactId>springbatch-socle-jsonapi</artifactId>
-           <version>RELEASE</version>
+           <version>0.3</version>
        </dependency>
+```
+
+
+Add the @EnableSpringBatchSocleApi annotation in your main class
+
+```java
+@SpringBootApplication
+@EnableSpringBatchSocleApi
+public class SampleApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(SampleApplication.class, args);
+    }
+}
 ```
 
 ## Usage
 
-See the springbatch-example project
+some minimal command :
+
+- List all job : curl -X GET http://localhost:8080/jobs/ 
+- Launch a Job : curl -X POST http://localhost:8080/jobs/SampleJob.json
+- Monitor Job Execution :  curl -X GET http://localhost:8080/executions/1.json
+- Stop a Job Execution : curl -X DELETE http://localhost:8080/executions/1.json
+
+For more detail see the [springbatch-example](https://github.com/tisseurdetoile/socle-batch/tree/master/springbatch-example) project
+
+## Version information matrix
+
+| socle-batch   |  JDK  |   spring |
+| ------------- |: ---: | -------: |
+| 0.4-SNAPSHOT  | 14    |  2.2.6   |
+| 0.3           | 11    |  2.1.14  |
+| 0.2           | 11    |  2.1.2   |
 
 ## Contributing
 

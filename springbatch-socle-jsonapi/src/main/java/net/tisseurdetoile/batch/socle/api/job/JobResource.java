@@ -2,11 +2,11 @@ package net.tisseurdetoile.batch.socle.api.job;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class JobResource extends ResourceSupport {
+public class JobResource extends RepresentationModel<JobResource> {
 
     private final String name;
 

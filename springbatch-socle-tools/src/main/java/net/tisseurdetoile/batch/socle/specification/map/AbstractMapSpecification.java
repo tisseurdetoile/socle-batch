@@ -37,7 +37,7 @@ public abstract class AbstractMapSpecification extends AbstractSpecification<Map
     public AbstractMapSpecification(final String key, final String val) {
         this.key = key;
         this.value = val;
-        this.compareMode = CompareMode.String;
+        this.compareMode = CompareMode.STRING;
     }
 
     /**
@@ -50,7 +50,7 @@ public abstract class AbstractMapSpecification extends AbstractSpecification<Map
 
         this.values = vals;
         this.key = key;
-        this.compareMode = CompareMode.List;
+        this.compareMode = CompareMode.LIST;
 
     }
 
