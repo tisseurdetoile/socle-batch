@@ -19,7 +19,7 @@ Add this in your pom.xml
        <dependency>
            <groupId>net.tisseurdetoile.batch</groupId>
            <artifactId>springbatch-socle-jsonapi</artifactId>
-           <version>0.4</version>
+           <version>0.5-SNAPSHOT</version>
        </dependency>
 ```
 
@@ -51,6 +51,7 @@ For more detail see the [springbatch-example](https://github.com/tisseurdetoile/
 
 | socle-batch   |  JDK  |   spring |
 | ------------- |: ---: | -------: |
+| 0.5-SNAPSHOT  | 11    |  2.2.11  |
 | 0.4           | 11    |  2.2.11  |
 | 0.3           | 11    |  2.1.14  |
 | 0.2           | 11    |  2.1.2   |
