@@ -2,7 +2,7 @@ package net.tisseurdetoile.batch.socle.api.job.exception;
 
 public class JobException extends  RuntimeException{
 
-    private String jobName;
+    private final String jobName;
 
     public JobException(String jobName) {
         this.jobName = jobName;

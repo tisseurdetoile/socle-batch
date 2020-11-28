@@ -25,12 +25,8 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
-
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-/**
- * https://github.com/spring-projects/spring-batch-admin/blob/9e3ad8bff99b8fad8da62426aa7d2959eb841bcf/spring-batch-admin-manager/src/main/java/org/springframework/batch/admin/web/JobController.java
- */
 @RestController
 @Log4j2
 @RequestMapping(value = "/jobs", produces = "application/hal+json")
@@ -75,25 +71,26 @@ public class JobController {
             content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = JobResourceDetailExecutions.class)))
     })
+
     @GetMapping("/{jobName}.json")
     public JobResourceDetailExecutions getJob(@PathVariable String jobName) {
         JobResourceDetailExecutions jobResourceDetailExecutions;
 
         try {
             Job job = jobService.getJob(jobName);
-
-             jobResourceDetailExecutions = new JobResourceDetailExecutions(job.getName(),
+            jobResourceDetailExecutions = new JobResourceDetailExecutions(job.getName(),
                      jobExplorerService.getJobInstanceCount(jobName),
                      null,
                      jobService.isLaunchable(jobName),
                      jobService.isIncrementable(jobName));
 
-            List<ExecutionResource> executions = jobService.getJobExecutionForJobName(jobName, true)
+            List<ExecutionResource> executions;
+            executions = jobService.getJobExecutionForJobName(jobName)
                     .stream()
                     .map(this::getExectionResource)
                     .collect(Collectors.toList());
 
-             jobResourceDetailExecutions.setExecutions(executions);
+            jobResourceDetailExecutions.setExecutions(executions);
 
             jobResourceDetailExecutions.add(linkTo(JobController.class).slash(String.format(END_EXTENTION, jobName)).withSelfRel());
 

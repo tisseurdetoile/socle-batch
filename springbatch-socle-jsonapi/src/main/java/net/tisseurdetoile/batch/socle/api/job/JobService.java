@@ -6,10 +6,7 @@ import net.tisseurdetoile.batch.socle.api.jobexplorer.JobExplorerService;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.configuration.ListableJobLocator;
-import org.springframework.batch.core.launch.JobExecutionNotRunningException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.NoSuchJobException;
-import org.springframework.batch.core.launch.NoSuchJobExecutionException;
+import org.springframework.batch.core.launch.*;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRepository;
@@ -20,40 +17,34 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Log4j2
 public class JobService implements DisposableBean {
-    /***
-     * TODO utliser le active execution.
-     * Source :
-     * https://github.com/spring-projects/spring-batch-admin/blob/9e3ad8bff99b8fad8da62426aa7d2959eb841bcf/spring-batch-admin-manager/src/main/java/org/springframework/batch/admin/web/JobController.java
-     * https://github.com/spring-attic/spring-batch-admin/blob/9e3ad8bff99b8fad8da62426aa7d2959eb841bcf/spring-batch-admin-manager/src/main/java/org/springframework/batch/admin/service/SimpleJobService.java
-     */
 
     private final JobRegistry jobRegistry;
-
     private final ListableJobLocator jobLocator;
-
     private final JobRepository jobRepository;
-
     private final JobLauncher jobLauncher;
-
     private final JobExplorerService jobExplorerService;
+    private final JobOperator jobOperator;
 
     // 60 seconds
-    private static final int DEFAULT_SHUTDOWN_TIMEOUT = 60 * 1000;
-
-    private final int shutdownTimeout = DEFAULT_SHUTDOWN_TIMEOUT;
+    private static final int SIXTY_SECONDS = 60 * 1000;
 
     @Autowired
-    JobService(JobRegistry jobRegistry, ListableJobLocator jobLocator, JobRepository jobRepository, JobLauncher jobLauncher, JobExplorerService jobExplorerService) {
+    JobService(JobRegistry jobRegistry,
+               ListableJobLocator jobLocator,
+               JobRepository jobRepository,
+               JobLauncher jobLauncher,
+               JobExplorerService jobExplorerService,
+               JobOperator jobOperator) {
         this.jobRegistry = jobRegistry;
         this.jobLocator = jobLocator;
         this.jobRepository = jobRepository;
         this.jobLauncher = jobLauncher;
         this.jobExplorerService = jobExplorerService;
+        this.jobOperator = jobOperator;
     }
 
     private final Collection<JobExecution> activeExecutions = Collections.synchronizedList(new ArrayList<>());
@@ -85,22 +76,23 @@ public class JobService implements DisposableBean {
 
         log.info("Stopping job execution: {} ", jobExecution);
 
-        jobExecution.stop();
+        jobOperator.stop(jobExecutionId);
         jobRepository.update(jobExecution);
 
         return jobExecution;
     }
 
-    public JobExecution abandon(Long jobExecutionId) throws NoSuchJobExecutionException, JobExecutionAlreadyRunningException {
+
+    public JobExecution abandon(Long jobExecutionId) throws NoSuchJobExecutionException, JobExecutionAlreadyRunningException, JobExecutionNotRunningException {
 
         JobExecution jobExecution = getJobExecution(jobExecutionId);
         if (jobExecution.getStatus().isLessThan(BatchStatus.STOPPING)) {
             throw new JobExecutionAlreadyRunningException("JobExecution is running or complete and therefore cannot be aborted");
         }
 
-        log.info("Stopping/abandonning job execution: {} ", jobExecution);
+        log.info("Stopping/abandoning job execution: {} ", jobExecution);
 
-        jobExecution.stop();
+        jobOperator.stop(jobExecutionId);
         jobExecution.setEndTime(new Date());
         jobExecution.upgradeStatus(BatchStatus.ABANDONED);
         jobRepository.update(jobExecution);
@@ -108,7 +100,7 @@ public class JobService implements DisposableBean {
         return jobExecution;
     }
 
-    public Set<JobExecution> getJobExecutionForJobName(String jobName, boolean cache_only) {
+    public Set<JobExecution> getJobExecutionForJobName(String jobName) {
         Set<JobExecution> res = new TreeSet<>(new JobExecutionByDateAssending());
 
         this.activeExecutions.stream()
@@ -145,7 +137,7 @@ public class JobService implements DisposableBean {
     }
 
     public int countJobs() {
-        Collection<String> names = new HashSet<String>(jobLocator.getJobNames());
+        Collection<String> names = new HashSet<>(jobLocator.getJobNames());
         names.addAll(this.jobsName());
         return names.size();
     }
@@ -154,7 +146,7 @@ public class JobService implements DisposableBean {
         if(jobLocator.getJobNames().contains(jobName)) {
             return jobLocator.getJob(jobName);
         } else {
-            throw new NoSuchJobException(String.format("Unable to find job %s", String.valueOf(jobName)));
+            throw new NoSuchJobException(String.format("Unable to find job %s", jobName));
         }
     }
 
@@ -175,20 +167,19 @@ public class JobService implements DisposableBean {
                 }
             }
 
-            if (job.getJobParametersIncrementer() != null && !restart) {
-                jobParameters = job.getJobParametersIncrementer().getNext(jobParameters);
+            JobParametersIncrementer jobParametersIncrementer = job.getJobParametersIncrementer();
+            if (jobParametersIncrementer!= null && !restart) {
+                jobParameters = jobParametersIncrementer.getNext(jobParameters);
             }
 
             jobExecution = jobLauncher.run(job, jobParameters);
 
-            /**
-             * A starting job has no StartDate so isRunning is false :(. So we cache StartingJobs
-             */
+            // A starting job has no StartDate so isRunning is false :(. So we cache StartingJobs
             if (jobExecution.isRunning() || jobExecution.getStatus() == BatchStatus.STARTING) {
                 activeExecutions.add(jobExecution);
             }
         } else {
-            throw new NoSuchJobException(String.format("Unable to find job %s to launch", String.valueOf(jobName)));
+            throw new NoSuchJobException(String.format("Unable to find job %s to launch", jobName));
         }
 
         return jobExecution;
@@ -224,7 +215,7 @@ public class JobService implements DisposableBean {
         }
 
         int count = 0;
-        int maxCount = (shutdownTimeout + 1000) / 1000;
+        int maxCount = (SIXTY_SECONDS + 1000) / 1000;
         while (!activeExecutions.isEmpty() && ++count < maxCount) {
             log.error("Waiting for {}  active executions to complete", activeExecutions.size());
             removeInactiveExecutions();
