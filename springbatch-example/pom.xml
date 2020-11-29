@@ -18,6 +18,7 @@
     </properties>
 
     <build>
+        <finalName>springbatch-example-webapp</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
