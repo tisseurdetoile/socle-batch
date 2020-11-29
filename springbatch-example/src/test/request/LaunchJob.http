@@ -7,3 +7,25 @@ Content-Type: application/x-www-form-urlencoded
 ### Lance SampleInseeJob
 POST http://localhost:8080/jobs/SampleInseeJob.json
 Content-Type: application/x-www-form-urlencoded
+
+###
+DELETE http://localhost:8080/executions/1.json
+Content-Type: application/x-www-form-urlencoded
+
+## ELEMENTS POUR HEROKU
+
+### Lance SampleInseeJob sur heroku
+POST https://socle-batch.herokuapp.com/jobs/SampleJob.json
+Content-Type: application/x-www-form-urlencoded
+
+### Lance SampleInseeJob sur heroku
+POST https://socle-batch.herokuapp.com/jobs/SampleInseeJob.json
+Content-Type: application/x-www-form-urlencoded
+
+### Recupere les jobs
+GET https://socle-batch.herokuapp.com/executions/2.json
+Content-Type: application/x-www-form-urlencoded
+
+### Recupere les jobs
+DELETE https://socle-batch.herokuapp.com/executions/2.json
+Content-Type: application/x-www-form-urlencoded
