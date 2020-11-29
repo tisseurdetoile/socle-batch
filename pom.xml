@@ -6,7 +6,7 @@
     <groupId>net.tisseurdetoile.batch</groupId>
     <artifactId>socle-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.5</version>
+    <version>0.6-SNAPSHOT</version>
     <name>(springbatch-socle-parent) Parent of the spring batch socle api</name>
 
     <parent>
