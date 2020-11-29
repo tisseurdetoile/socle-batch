@@ -17,8 +17,8 @@ A [demo](https://socle-batch.herokuapp.com/swagger-ui/index.html?configUrl=/v3/a
 
 | socle-batch | JDK | spring-boot | spring-batch-core |
 | :--- | :---: | :---: | :---: |
-| 0.6-SNAPSHOT | 11 | 2.4.0 | 2.4.0 | 4.3.0 |
-| 0.5 | 11 | 2.4.0 | 2.4.0 | 4.3.0 |
+| 0.6-SNAPSHOT | 11 | 2.4.0 | 4.3.0 | 4.3.0 |
+| 0.5 | 11 | 2.4.0 | 4.3.0 |
     
 ## Installation
 
