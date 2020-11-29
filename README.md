@@ -6,6 +6,8 @@
 
 > A simple JSON api for launching/monitoring you spring batch. With backward compatibility for spring-batch-admin
 
+A [demo](https://socle-batch.herokuapp.com/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config) is running on heroku
+
 ## Build Status
 
 - release : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=release)
@@ -43,10 +45,10 @@ public class SampleApplication {
 
 some minimal command :
 
-- List all job : curl -X GET http://localhost:8080/jobs/ 
-- Launch a Job : curl -X POST http://localhost:8080/jobs/SampleJob.json
-- Monitor Job Execution :  curl -X GET http://localhost:8080/executions/1.json
-- Stop a Job Execution : curl -X DELETE http://localhost:8080/executions/1.json
+- List all job : curl -s -X GET https://socle-batch.herokuapp.com/jobs/ 
+- Launch a Job : curl -s -X POST https://socle-batch.herokuapp.com/jobs/SampleJob.json
+- Monitor Job Execution :  curl -s -X GET https://socle-batch.herokuapp.com/executions/1.json
+- Stop a Job Execution : curl -s -X DELETE https://socle-batch.herokuapp.com/executions/1.json
 
 For more detail see the [springbatch-example](https://github.com/tisseurdetoile/socle-batch/tree/master/springbatch-example) project
 

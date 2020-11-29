@@ -16,9 +16,6 @@ public class IsValorisedKey extends AbstractMapSpecification  {
     @Override
     public boolean isSatisfiedBy(Map<String, String> candidate) {
 
-        if ((candidate != null) && candidate.containsKey(this.getKey())) {
-            return true;
-        }
-        return false;
+        return (candidate != null) && candidate.containsKey(this.getKey());
     }
 }
