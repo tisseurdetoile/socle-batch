@@ -4,7 +4,7 @@
 [![License: GPLv3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](LICENCE)
 [![Twitter: tisseurdetoile](https://img.shields.io/twitter/follow/tisseurdetoile.svg?style=social)](https://twitter.com/tisseurdetoile)
 
-> A simple JSON api for launching/monitoring you spring batch. With backward compatibility for spring-batch-admin
+> A simple JSON api which launch/stop/monitor your spring-batch. With backward compatibility for spring-batch-admin
 
 A [demo](https://socle-batch.herokuapp.com/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config) is running on heroku
 
@@ -13,6 +13,12 @@ A [demo](https://socle-batch.herokuapp.com/swagger-ui/index.html?configUrl=/v3/a
 - release : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=release)
 - develop : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=develop)
 
+## Release information
+
+| socle-batch | JDK | spring-boot | spring-batch-core |
+| :--- | :---: | :---: | :---: |
+| 0.5 | 11 | 2.4.0 | 2.4.0 | 4.3.0 |
+    
 ## Installation
 
 You can use the [springbatch-example](https://github.com/tisseurdetoile/socle-batch/tree/main/springbatch-example) as a starter project
