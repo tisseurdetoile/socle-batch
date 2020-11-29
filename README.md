@@ -1,30 +1,35 @@
-# socle-batch
+# Welcome to socle-batch 👋
+[![Version](https://img.shields.io/github/v/tag/tisseurdetoile/socle-batch)](https://github.com/tisseurdetoile/socle-batch/releases)
+[![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://github.com/tisseurdetoile/socle-batch/wiki)
+[![License: GPLv3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](LICENCE)
+[![Twitter: tisseurdetoile](https://img.shields.io/twitter/follow/tisseurdetoile.svg?style=social)](https://twitter.com/tisseurdetoile)
 
-A simple JSON api for launching/monitoring you spring batch. 
+> A simple JSON api for launching/monitoring you spring batch. With backward compatibility for spring-batch-admin
+
+A [demo](https://socle-batch.herokuapp.com/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config) is running on heroku
 
 ## Build Status
 
-- release 0.4 : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=release)
-- develop 0.5-SNAPSHOT : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=develop)
-    
+- release : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=release)
+- develop : ![Java CI with Maven](https://github.com/tisseurdetoile/socle-batch/workflows/Java%20CI%20with%20Maven/badge.svg?branch=develop)
+
 ## Installation
 
-You can use the [springbatch-example](https://github.com/tisseurdetoile/socle-batch/tree/master/springbatch-example) as a starter project
+You can use the [springbatch-example](https://github.com/tisseurdetoile/socle-batch/tree/main/springbatch-example) as a starter project
 
 ### In existing spring-batch project
 
 Add this in your pom.xml
 
 ```xml
-       <dependency>
-           <groupId>net.tisseurdetoile.batch</groupId>
-           <artifactId>springbatch-socle-jsonapi</artifactId>
-           <version>0.4</version>
-       </dependency>
+<dependency>
+    <groupId>net.tisseurdetoile.batch</groupId>
+    <artifactId>springbatch-socle-jsonapi</artifactId>
+    <version>0.5-SNAPSHOT</version>
+</dependency>
 ```
 
-
-Add the @EnableSpringBatchSocleApi annotation in your main class
+Add the *@EnableSpringBatchSocleApi* annotation in your main class
 
 ```java
 @SpringBootApplication
@@ -40,31 +45,36 @@ public class SampleApplication {
 
 some minimal command :
 
-- List all job : curl -X GET http://localhost:8080/jobs/ 
-- Launch a Job : curl -X POST http://localhost:8080/jobs/SampleJob.json
-- Monitor Job Execution :  curl -X GET http://localhost:8080/executions/1.json
-- Stop a Job Execution : curl -X DELETE http://localhost:8080/executions/1.json
+- List all job : curl -s -X GET https://socle-batch.herokuapp.com/jobs/ 
+- Launch a Job : curl -s -X POST https://socle-batch.herokuapp.com/jobs/SampleJob.json
+- Monitor Job Execution :  curl -s -X GET https://socle-batch.herokuapp.com/executions/1.json
+- Stop a Job Execution : curl -s -X DELETE https://socle-batch.herokuapp.com/executions/1.json
 
 For more detail see the [springbatch-example](https://github.com/tisseurdetoile/socle-batch/tree/master/springbatch-example) project
 
-## Version information matrix
+## Author
 
-| socle-batch   |  JDK  |   spring |
-| ------------- |: ---: | -------: |
-| 0.4           | 11    |  2.2.11  |
-| 0.3           | 11    |  2.1.14  |
-| 0.2           | 11    |  2.1.2   |
+👤 **Le TisseurDeToile**
 
-## Contributing
+* Website: http://www.tisseurdetoile.net
+* Twitter: [@tisseurdetoile](https://twitter.com/tisseurdetoile)
+* Github: [@tisseurDeToile](https://github.com/tisseurDeToile)
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+## 🤝 Contributing
 
-Please make sure to update tests as appropriate.
+Contributions, issues and feature requests are welcome!
 
-## License
+Feel free to check [issues page](https://github.com/tisseurdetoile/socle-batch/issues). You can also take a look at the [contributing guide](https://github.com/tisseurdetoile/socle-batch/blob/main/CONTRIBUTING.md).
 
-[GPL](https://choosealicense.com/licenses/gpl-3.0/)
+## Show your support
 
-## Usefull tool
+Give a ⭐️ if this project helped you!
 
-- [makeAReadme](https://www.makeareadme.com/)
+## 📝 License
+
+Copyright © 2020 [Le TisseurDeToile](https://github.com/tisseurDeToile).
+
+This project is [GPLv3](LICENCE) licensed.
+
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_

@@ -6,13 +6,13 @@
     <groupId>net.tisseurdetoile.batch</groupId>
     <artifactId>socle-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.4</version>
+    <version>0.5-SNAPSHOT</version>
     <name>(springbatch-socle-parent) Parent of the spring batch socle api</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.11.RELEASE</version>
+        <version>2.4.0</version>
         <relativePath/>
     </parent>
 
@@ -151,8 +151,7 @@
             </build>
         </profile>
     </profiles>
-
-
+    
     <build>
         <pluginManagement>
             <plugins>

@@ -4,10 +4,11 @@ import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor;
+import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.launch.support.SimpleJobOperator;
 import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +22,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableBatchProcessing
 public class CustomBatchConfig extends DefaultBatchConfigurer {
 
-    @Autowired
-    private JobRepository jobRepository;
+    private final JobRepository jobRepository;
 
     @Value("${spring.batch.jsonapi.poolsize:3}")
     private int poolSize;
@@ -32,6 +32,10 @@ public class CustomBatchConfig extends DefaultBatchConfigurer {
 
     @Value("${spring.batch.jsonapi.queuesize:2}")
     private int queueSize;
+
+    CustomBatchConfig (JobRepository jobRepository) {
+        this.jobRepository = jobRepository;
+    }
 
     @Bean
     public TaskExecutor taskExecutor() {
@@ -43,6 +47,27 @@ public class CustomBatchConfig extends DefaultBatchConfigurer {
         executor.initialize();
 
         return executor;
+    }
+
+    /**
+     * NOTA :
+     *
+     * If you set the table prefix on the job repository, don’t forget to set it on the job explorer as well.
+     */
+    @Bean
+    public SimpleJobOperator jobOperator(JobExplorer jobExplorer,
+                                         JobRepository jobRepository,
+                                         JobRegistry jobRegistry,
+                                         JobLauncher jobLauncher) {
+
+        SimpleJobOperator jobOperator = new SimpleJobOperator();
+
+        jobOperator.setJobExplorer(jobExplorer);
+        jobOperator.setJobRepository(jobRepository);
+        jobOperator.setJobRegistry(jobRegistry);
+        jobOperator.setJobLauncher(jobLauncher);
+
+        return jobOperator;
     }
 
     @Override
