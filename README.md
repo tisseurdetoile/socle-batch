@@ -25,7 +25,7 @@ Add this in your pom.xml
 <dependency>
     <groupId>net.tisseurdetoile.batch</groupId>
     <artifactId>springbatch-socle-jsonapi</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5</version>
 </dependency>
 ```
 
