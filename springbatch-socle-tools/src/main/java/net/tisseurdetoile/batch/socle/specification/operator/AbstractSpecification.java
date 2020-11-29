@@ -8,9 +8,6 @@ package net.tisseurdetoile.batch.socle.specification.operator;
 public abstract class AbstractSpecification<E> implements ISpecification<E>  {
 
     @Override
-    public abstract boolean isSatisfiedBy(E candidate);
-
-    @Override
     public final ISpecification<E> or(final ISpecification<E> otherSpecification) {
         return new OrSpecification<>(this, otherSpecification);
     }
