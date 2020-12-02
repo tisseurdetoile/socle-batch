@@ -57,9 +57,9 @@ public class SampleApplication {
 
 some minimal command :
 
-- List all job : curl -s -X GET https://socle-batch.herokuapp.com/jobs/ 
+- List all job : curl -s -X GET https://socle-batch.herokuapp.com/jobs/
 - Launch a Job : curl -s -X POST https://socle-batch.herokuapp.com/jobs/SampleJob.json
-- Monitor Job Execution :  curl -s -X GET https://socle-batch.herokuapp.com/executions/1.json
+- Monitor Job Execution : curl -s -X GET https://socle-batch.herokuapp.com/executions/1.json
 - Stop a Job Execution : curl -s -X DELETE https://socle-batch.herokuapp.com/executions/1.json
 
 For more detail see the [springbatch-example](https://github.com/tisseurdetoile/socle-batch/tree/master/springbatch-example) project
