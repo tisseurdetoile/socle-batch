@@ -17,11 +17,14 @@ A [demo](https://socle-batch.herokuapp.com/swagger-ui/index.html?configUrl=/v3/a
 
 ## Release information
 
-| socle-batch | JDK | spring-boot | spring-batch-core |
-| :--- | :---: | :---: | :---: |
-| 0.6-SNAPSHOT | 11 | 2.4.0 | 4.3.0 | 4.3.0 |
-| 0.5 | 11 | 2.4.0 | 4.3.0 |
-    
+| socle-batch  | JDK |  spring-boot   | spring-batch-core |
+| :----------- | :-: | :------------: | :---------------: |
+| 0.6-SNAPSHOT | 11  |     2.4.0      |       4.3.0       |
+| 0.5          | 11  |     2.4.0      |       4.3.0       |
+| 0.4          | 11  | 2.2.11.RELEASE |   4.2.4.RELEASE   |
+| 0.3          | 11  | 2.1.14.RELEASE |  4.1.14.RELEASE   |
+| 0.2          | 11  | 2.1.2.RELEASE  |   4.1.1.RELEASE   |
+
 ## Installation
 
 You can use the [springbatch-example](https://github.com/tisseurdetoile/socle-batch/tree/main/springbatch-example) as a starter project
