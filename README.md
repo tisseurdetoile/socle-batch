@@ -1,8 +1,10 @@
 # Welcome to socle-batch 👋
-[![Version](https://img.shields.io/github/v/tag/tisseurdetoile/socle-batch)](https://github.com/tisseurdetoile/socle-batch/releases)
-[![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://github.com/tisseurdetoile/socle-batch/wiki)
-[![License: GPLv3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](LICENCE)
-[![Twitter: tisseurdetoile](https://img.shields.io/twitter/follow/tisseurdetoile.svg?style=social)](https://twitter.com/tisseurdetoile)
+
+[![Version](https://img.shields.io/github/v/tag/tisseurdetoile/socle-batch?style=for-the-badge)](https://github.com/tisseurdetoile/socle-batch/releases)
+[![MavenCentral](https://img.shields.io/maven-central/v/net.tisseurdetoile.batch/socle-parent?style=for-the-badge)](https://search.maven.org/search?q=g:net.tisseurdetoile.batch)
+[![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg?style=for-the-badge)](https://github.com/tisseurdetoile/socle-batch/wiki)
+[![License: GPLv3](https://img.shields.io/badge/License-GPLv3-yellow.svg?style=for-the-badge)](LICENCE)
+[![Twitter: tisseurdetoile](https://img.shields.io/twitter/follow/tisseurdetoile?label=%40tisseurdetoile&logo=twitter&style=for-the-badge)](https://twitter.com/tisseurdetoile)
 
 > A simple JSON api which launch/stop/monitor your spring-batch. With backward compatibility for spring-batch-admin
 
@@ -36,7 +38,7 @@ Add this in your pom.xml
 </dependency>
 ```
 
-Add the *@EnableSpringBatchSocleApi* annotation in your main class
+Add the _@EnableSpringBatchSocleApi_ annotation in your main class
 
 ```java
 @SpringBootApplication
@@ -63,9 +65,11 @@ For more detail see the [springbatch-example](https://github.com/tisseurdetoile/
 
 👤 **Le TisseurDeToile**
 
-* Website: http://www.tisseurdetoile.net
-* Twitter: [@tisseurdetoile](https://twitter.com/tisseurdetoile)
-* Github: [@tisseurDeToile](https://github.com/tisseurDeToile)
+[![Keybase PGP](https://img.shields.io/keybase/pgp/tisseurdetoile?style=for-the-badge)](https://keybase.io/tisseurdetoile)
+
+- Website: http://www.tisseurdetoile.net
+- Twitter: [@tisseurdetoile](https://twitter.com/tisseurdetoile)
+- Github: [@tisseurDeToile](https://github.com/tisseurDeToile)
 
 ## 🤝 Contributing
 
@@ -83,5 +87,6 @@ Copyright © 2020 [Le TisseurDeToile](https://github.com/tisseurDeToile).
 
 This project is [GPLv3](LICENCE) licensed.
 
-***
+---
+
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
