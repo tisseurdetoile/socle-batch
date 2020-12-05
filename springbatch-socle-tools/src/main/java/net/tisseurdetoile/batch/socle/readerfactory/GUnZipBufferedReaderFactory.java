@@ -26,8 +26,8 @@ public class GUnZipBufferedReaderFactory implements BufferedReaderFactory {
      * @param resource resource representant le fichier
      * @param encoding encodage des fichier
      * @return un reader sur le fichier
-     * @throws UnsupportedEncodingException
-     * @throws IOException
+     * @throws UnsupportedEncodingException Encodage incorrect
+     * @throws IOException problème rencontrés pendant le décodage
      */
     @Override
     public BufferedReader create(Resource resource, String encoding) throws IOException {

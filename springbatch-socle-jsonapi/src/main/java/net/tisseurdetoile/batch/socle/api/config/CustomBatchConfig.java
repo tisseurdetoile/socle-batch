@@ -51,8 +51,15 @@ public class CustomBatchConfig extends DefaultBatchConfigurer {
 
     /**
      * NOTA :
+     * If you set the table prefix on the job repository,
+     * don’t forget to set it on the job explorer as well.
+     * END NOTA
      *
-     * If you set the table prefix on the job repository, don’t forget to set it on the job explorer as well.
+     * @param jobExplorer {@link org.springframework.batch.core.explore.JobExplorer}
+     * @param jobRepository {@link org.springframework.batch.core.repository.JobRepository}
+     * @param jobRegistry {@link org.springframework.batch.core.configuration.JobRegistry}
+     * @param jobLauncher {@link org.springframework.batch.core.launch.JobLauncher}
+     * @return {@link org.springframework.batch.core.explore.JobExplorer}
      */
     @Bean
     public SimpleJobOperator jobOperator(JobExplorer jobExplorer,

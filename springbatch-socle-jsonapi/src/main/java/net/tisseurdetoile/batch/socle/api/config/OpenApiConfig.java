@@ -18,10 +18,12 @@ public class OpenApiConfig {
     /**
      * Open Api Configuration
      * @param buildProperties propriété valorisé par spring-boot-maven-plugin / build-info
+     * @param gitProperties propriété valorisé par git-commit-id-plugin
      * @return OpenApi configuration
      */
     @Bean
-    public OpenAPI openAPIConfiguration(@Autowired(required = false) BuildProperties buildProperties, GitProperties gitProperties) {
+    public OpenAPI openAPIConfiguration(@Autowired(required = false) BuildProperties buildProperties,
+                                        GitProperties gitProperties) {
         Contact contact = new Contact()
                 .email("webmaster@tisseurdetoile.net")
                 .url("https://blog.tisseurdetoile.net/");
