@@ -23,7 +23,7 @@ public class OpenApiConfig {
      */
     @Bean
     public OpenAPI openAPIConfiguration(@Autowired(required = false) BuildProperties buildProperties,
-                                        GitProperties gitProperties) {
+                                        @Autowired(required = false) GitProperties gitProperties) {
         Contact contact = new Contact()
                 .email("webmaster@tisseurdetoile.net")
                 .url("https://blog.tisseurdetoile.net/");
