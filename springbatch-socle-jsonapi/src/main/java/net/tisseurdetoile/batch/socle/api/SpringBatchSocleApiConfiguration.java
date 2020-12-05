@@ -13,10 +13,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableBatchProcessing
-@ComponentScan(
-        basePackages = {"net.tisseurdetoile.batch.job"},
-        basePackageClasses={ExecutionController.class, JobController.class, JobExplorerService.class, CustomBatchConfig.class, OpenApiConfig.class})
-@ComponentScan()
+@ComponentScan(basePackages = { "net.tisseurdetoile.batch.job" }, basePackageClasses = { ExecutionController.class,
+        JobController.class, JobExplorerService.class, CustomBatchConfig.class, OpenApiConfig.class })
 public class SpringBatchSocleApiConfiguration {
 
     @Autowired(required = false)
