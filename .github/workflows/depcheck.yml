@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build project with Maven
-        run: mvn clean install
+        run: mvn clean install -Dgpg.skip
       - name: Depcheck
         uses: dependency-check/Dependency-Check_Action@main
         id: Depcheck
