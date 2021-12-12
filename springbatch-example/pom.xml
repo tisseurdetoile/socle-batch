@@ -6,7 +6,7 @@
     <parent>
         <groupId>net.tisseurdetoile.batch</groupId>
         <artifactId>socle-parent</artifactId>
-        <version>0.6</version>
+        <version>0.6.1-SNAPSHOT</version>
     </parent>
     <artifactId>springbatch-example</artifactId>
     <packaging>jar</packaging>
@@ -30,6 +30,12 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
 
    <dependencies>
@@ -42,6 +48,10 @@
            <groupId>${project.groupId}</groupId>
            <artifactId>springbatch-socle-tools</artifactId>
            <version>${project.version}</version>
+       </dependency>
+       <dependency>
+           <groupId>io.micrometer</groupId>
+           <artifactId>micrometer-registry-prometheus</artifactId>
        </dependency>
        <dependency>
            <groupId>com.h2database</groupId>

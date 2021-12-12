@@ -12,7 +12,7 @@ Pour **builder** à partir du repertoire de travail
 
 Pour **déployer** sur Heroku à partir du repertoire de travail
 
-`heroku deploy:jar springbatch-example/target/springbatch-example-webapp.jar --app socle-batch`  
+`heroku deploy:jar springbatch-example/target/springbatch-example-webapp.jar --app socle-batch --jdk 17`
 
 Consulter les **logs**
 

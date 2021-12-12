@@ -1,0 +1,39 @@
+name: Java Depcheck
+
+on:
+  push:
+    branches:
+      - develop
+      - release
+  pull_request:
+    branches: [ develop ]
+jobs:
+  depchecktest:
+    runs-on: ubuntu-latest
+    name: depecheck_test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Build project with Maven
+        run: mvn clean install -Dgpg.skip
+      - name: Depcheck
+        uses: dependency-check/Dependency-Check_Action@main
+        id: Depcheck
+        with:
+          project: 'socle-batch'
+          path: '.'
+          format: 'HTML'    
+          args: >
+            --failOnCVSS 7
+            --enableRetired
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+           name: Depcheck report
+           path: ${{github.workspace}}/reports

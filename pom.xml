@@ -6,7 +6,7 @@
     <groupId>net.tisseurdetoile.batch</groupId>
     <artifactId>socle-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.6</version>
+    <version>0.6.1-SNAPSHOT</version>
     <name>(springbatch-socle-parent) Parent of the spring batch socle api</name>
 
     <parent>
@@ -155,7 +155,7 @@
                             <dependency>
                                 <groupId>com.thoughtworks.xstream</groupId>
                                 <artifactId>xstream</artifactId>
-                                <version>1.4.15</version>
+                                <version>[1.4.18,)</version>
                             </dependency>
                         </dependencies>
                     </plugin>
